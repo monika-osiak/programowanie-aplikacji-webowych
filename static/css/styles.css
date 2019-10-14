@@ -1,0 +1,146 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background-color: #0b0b19;
+  font-family: 'Roboto Slab', serif;
+  color: white;
+}
+
+header {
+  position: fixed;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 70px;
+  background-color: #1c1c2a;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+header h1 {
+  width: 200px;
+  margin: auto 0;
+  font-size: 2.5rem;
+  background: -webkit-gradient(linear, left top, right top, from(#fc9c45), color-stop(60%, #c73c4e));
+  background: linear-gradient(to right, #fc9c45 0%, #c73c4e 60%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h1 {
+  font-weight: 300;
+  text-align: center;
+}
+
+h4 {
+  font-weight: 300;
+}
+
+h6 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  color: #888888;
+}
+
+nav {
+  margin: auto 0;
+  text-align: right;
+  width: calc(100vw - 200px);
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  text-align: center;
+  margin: 0 20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+}
+
+p {
+  font-family: 'Raleway', sans-serif;
+}
+
+.box {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: #1c1c2a;
+  border-radius: 20px;
+  -webkit-box-shadow: -1px -0px 20px black;
+          box-shadow: -1px -0px 20px black;
+}
+
+.container {
+  margin-top: 100px;
+}
+
+.author {
+  color: #888888;
+}
+
+.info {
+  text-align: center;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  background: -webkit-gradient(linear, left top, right top, from(#fc9c45), color-stop(60%, #c73c4e));
+  background: linear-gradient(to right, #fc9c45 0%, #c73c4e 60%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.button {
+  width: 300px;
+  height: 50px;
+  margin: 40px calc(50% - 150px);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(25%, #c73c4e), to(#fc9c45));
+  background-image: linear-gradient(#c73c4e 25%, #fc9c45);
+  border-radius: 30px;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: 'Raleway', sans-serif;
+}
+
+.button:active {
+  -webkit-transform: scale(1.001);
+          transform: scale(1.001);
+}
+
+input {
+  border: none;
+  border-bottom: 2px solid rgba(200, 200, 200, 0.5);
+  color: rgba(200, 200, 200, 0.5);
+  background-color: transparent;
+  width: 90%;
+  height: 40px;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 300;
+  margin: 20px 5%;
+  font-family: 'Raleway', sans-serif;
+}
+/*# sourceMappingURL=styles.css.map */

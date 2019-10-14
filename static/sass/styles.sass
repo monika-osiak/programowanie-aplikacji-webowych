@@ -1,0 +1,126 @@
+$navy: #0b0b19
+$grey: #1c1c2a
+$lighter-grey: #888888
+$orange: #fc9c45
+$pink: #c73c4e
+
+
+@mixin background-gradient
+    background-image: linear-gradient($pink 25%, $orange)
+
+@mixin text-gradient
+    background: linear-gradient(to right, $orange 0%, $pink  60%)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+
+*
+    //border: 1px dashed lightblue // debug only
+    //margin: 0
+    box-sizing: border-box
+
+body
+    background-color: $navy
+    font-family: 'Roboto Slab', serif
+    color: white
+
+header
+    position: fixed
+    display: flex
+    z-index: 100
+    top: 0
+    right: 0
+    left: 0
+    height: 70px
+    background-color: $grey
+    overflow: hidden
+    padding: 0 20px
+    h1
+        width: 200px
+        
+        margin: auto 0
+        font-size: 2.5rem
+        @include text-gradient
+
+h1
+    font-weight: 300
+    text-align: center
+
+h4
+    font-weight: 300
+
+h6
+    font-family: 'Raleway', sans-serif
+    font-weight: 300
+    color: $lighter-grey
+
+nav
+    margin: auto 0
+    text-align: right
+    width: calc(100vw - 200px)
+    ul
+        list-style-type: none
+        padding: 0
+        margin: 0
+        li
+            display: inline-block
+            text-align: center
+            margin: 0 20px
+            a
+                text-decoration: none
+                color: white
+
+p
+    font-family: 'Raleway', sans-serif
+
+.box
+    margin-top: 15px
+    margin-bottom: 15px
+    background-color: $grey
+    border-radius: 20px
+    box-shadow: -1px -0px 20px black
+
+.container
+    margin-top: 100px
+
+.author
+    color: $lighter-grey
+
+.info
+    text-align: center
+
+a
+    color: white
+    text-decoration: none
+    &:hover
+        @include text-gradient
+
+.button
+    width: 300px
+    height: 50px
+    margin: 40px calc(50% - 150px)
+    @include background-gradient
+    border-radius: 30px
+    border: none
+    color: white
+    font-size: 1.1rem
+    font-weight: 300
+    text-transform: uppercase
+    text-align: center
+    font-family: 'Raleway', sans-serif
+    &:active
+        transform: scale(1.001)
+
+input
+    border: none
+    border-bottom: 2px solid rgba(200, 200, 200, 0.5)
+    color: rgba(200, 200, 200, 0.5)
+    background-color: transparent
+    width: 90%
+    height: 40px
+    padding: 10px
+    font-size: 1rem
+    font-weight: 300
+    margin: 20px 5%
+    font-family: 'Raleway', sans-serif
+    &:focus
+        //border: none

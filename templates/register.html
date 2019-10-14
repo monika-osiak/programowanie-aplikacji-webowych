@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-6 offset-md-3 box'>
+                <h1>Join today!</h1>
+                <form>
+                    <input type="text" placeholder="Username" name="username"><br>
+                    <input type="text" placeholder="Email" name="email"><br>
+                    <input type="text" placeholder="Password" name="password"><br>
+                    <input type="text" placeholder="Confirm password" name="confirm-password"><br>
+                    <button type="submit" class="button">Sign up</button>
+                </form>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-6 offset-md-3 info'>
+                <p>Already have an account? <a href={{ url_for('login') }}>Log in</a></p>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
