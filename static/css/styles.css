@@ -144,4 +144,9 @@ input {
   margin: 20px 5%;
   font-family: 'Raleway', sans-serif;
 }
+
+footer {
+  text-align: center;
+  font-size: 0.8rem;
+}
 /*# sourceMappingURL=styles.css.map */
