@@ -30,13 +30,10 @@ class CheckLogin(Resource):
     def get(self, username):
         headers = {'Content-Type': 'text/html'}
         if username in users:
-            message = 'Podany użytkownik istnieje.'
             status = 404
         else:
-            # users.append(username)
-            message = 'Dodano użytkownika.'
             status = 200
-        return make_response(render_template('user.html', users=users, message=message), status, headers)
+        return make_response(render_template('user.html'), status, headers)
 
 api.add_resource(Index, '/')
 api.add_resource(Login, '/login')
