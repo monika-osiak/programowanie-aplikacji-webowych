@@ -31,9 +31,11 @@ class CheckLogin(Resource):
         headers = {'Content-Type': 'text/html'}
         if username in users:
             status = 404
+            message = "User exists."
         else:
             status = 200
-        return make_response(render_template('user.html'), status, headers)
+            message = "There is no user with this username."
+        return make_response(message, status, headers)
 
 api.add_resource(Index, '/')
 api.add_resource(Login, '/login')
