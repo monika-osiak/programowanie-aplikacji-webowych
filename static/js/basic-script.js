@@ -1,3 +1,13 @@
+document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+});
+
+// Don't submit form on enter
+document.getElementById("form").onkeypress = (e) => {
+    if (e.key == "Enter")
+        e.preventDefault();
+};
+
 function asyncCheckLogin(login) {
     return new Promise((resolve, reject) => {
         const url = `/user/${login}`;
