@@ -8,9 +8,11 @@ Opracowanie formularza rejestracyjnego dla nowych użytkowników. Formularz musi
 #### Deadline: 28.10.2019
 #### Jak testować?
 ```
-to do: dodać listing kodu na uruchomienia na Dockerze
-also, wypadałoby sprawdzić, czy to w ogóle działa na Dockerze
+docker build -t flask:latest .
+docker run -d -p 5000:5000 flask:latest
 ```
+
+Następnie w dowolnej przeglądarce proszę wejść na stronę `http://0.0.0.0:5000/register` i wypełnić formularz.
 
 W części backendowej zahardkodowane są dwa loginy, które są zajęte:
 * osiakm
