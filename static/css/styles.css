@@ -145,7 +145,20 @@ input {
   font-family: 'Raleway', sans-serif;
 }
 
+.valid {
+  border-bottom: 2px solid green;
+}
+
+.invalid {
+  border-bottom: 2px solid red;
+}
+
 footer {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+#feedback {
   text-align: center;
   font-size: 0.8rem;
 }
