@@ -5,11 +5,11 @@
         <div class='row'>
             <div class='col-md-6 offset-md-3 box'>
                 <h1>Join today!</h1>
-                <form>
-                    <input type="text" placeholder="Username" name="username"><br>
-                    <input type="text" placeholder="Email" name="email"><br>
-                    <input type="text" placeholder="Password" name="password"><br>
-                    <input type="text" placeholder="Confirm password" name="confirm-password"><br>
+                <form id="form">
+                    <input type="text" placeholder="Username" name="username" id='username'>
+                    <input type="text" placeholder="Email" name="email">
+                    <input type="text" placeholder="Password" name="password">
+                    <input type="text" placeholder="Confirm password" name="confirm-password">
                     <button type="submit" class="button">Sign up</button>
                 </form>
             </div>
@@ -20,5 +20,7 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/basic-script.js') }}"></script>
 
 {% endblock content %}
