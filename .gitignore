@@ -2,3 +2,5 @@
 mendeley-venv/
 *.css.map
 *.min.css
+.vscode
+__pycache__
