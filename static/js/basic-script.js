@@ -1,3 +1,4 @@
+/* commented due to debug purposes
 document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
 });
@@ -7,6 +8,7 @@ document.getElementById("form").onkeypress = (e) => {
     if (e.key == "Enter")
         e.preventDefault();
 };
+*/
 
 function asyncCheckLogin(login) {
     return new Promise((resolve, reject) => {
