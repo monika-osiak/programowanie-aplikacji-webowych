@@ -26,6 +26,8 @@ class Login(Resource):
         return make_response(render_template('login.html'), 200, headers)
 
 
+import models
+
 class Register(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
@@ -34,8 +36,21 @@ class Register(Resource):
     def post(self):
         headers = {'Content-Type': 'text/html'}
         data = parser.parse_args()
+
+        if models.UserModel.find_by_username(data['username']):
+            return {'message': 'User {} already exists'. format(data['username'])}
+
+        new_user = models.UserModel(
+            username = data['username'],
+            password = data['password'],
+            email = data['email']
+        )
         print(data)
-        return make_response(data, 200, headers)
+        try:
+            new_user.save_to_db()
+            return {'message': 'User {} was created'.format( data['username'])}, 200
+        except:
+            return {'message': 'Something went wrong'}, 500
 
 
 class CheckLogin(Resource):
