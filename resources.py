@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask import make_response, render_template
+import models
 
 users = [
     'osiakm',
@@ -25,9 +26,6 @@ class Login(Resource):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('login.html'), 200, headers)
 
-
-import models
-
 class Register(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
@@ -37,8 +35,8 @@ class Register(Resource):
         headers = {'Content-Type': 'text/html'}
         data = parser.parse_args()
 
-        if models.UserModel.find_by_username(data['username']):
-            return {'message': 'User {} already exists'. format(data['username'])}
+        #if models.UserModel.find_by_username(data['username']):
+        #    return {'message': 'User {} already exists'. format(data['username'])}
 
         new_user = models.UserModel(
             username = data['username'],
@@ -46,11 +44,12 @@ class Register(Resource):
             email = data['email']
         )
         print(data)
-        try:
-            new_user.save_to_db()
-            return {'message': 'User {} was created'.format( data['username'])}, 200
-        except:
-            return {'message': 'Something went wrong'}, 500
+        new_user.save_to_db()
+        #try:
+        #    new_user.save_to_db()
+        #    return {'message': 'User {} was created'.format( data['username'])}, 200
+        #except:
+        #    return {'message': 'Something went wrong'}, 500
 
 
 class CheckLogin(Resource):
