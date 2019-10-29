@@ -3,6 +3,7 @@
 from flask import Flask, render_template, make_response
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
+from passlib.hash import pbkdf2_sha256 as sha256
 
 app = Flask(__name__)
 api = Api(app)
@@ -48,6 +49,14 @@ class UserModel(db.Model):
         except:
             return {'message': 'Something went wrong'}
 
+    @staticmethod
+    def generate_hash(password):
+        return sha256.hash(password)
+
+    @staticmethod
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)
+
 @app.before_first_request
 def create_tables():
     print('Tworzenie bazy danych.')
@@ -86,7 +95,7 @@ class Login(Resource):
         if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}
         
-        if data['password'] == current_user.password:
+        if UserModel.verify_hash(data['password'], current_user.password):
             return make_response(render_template('index.html', user=current_user.username), 200, headers)
         else:
             return {'message': 'Wrong credentials'}
@@ -105,7 +114,7 @@ class Register(Resource):
 
         new_user = UserModel(
             username = data['username'],
-            password = data['password'],
+            password = UserModel.generate_hash(data['password']),
             email = data['email']
         )
         try:
