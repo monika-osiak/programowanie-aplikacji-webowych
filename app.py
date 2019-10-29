@@ -37,11 +37,6 @@ def create_tables():
     print(db.engine.table_names())
 
 
-users = [
-    'osiakm',
-    'admin'
-]
-
 login_parser = reqparse.RequestParser().add_argument(
     'username', help='This field cannot be blank', required=True
 ).add_argument(
@@ -106,7 +101,7 @@ class Register(Resource):
 class CheckLogin(Resource):
     def get(self, username):
         headers = {'Content-Type': 'text/html'}
-        if username in users:
+        if UserModel.find_by_username(username):
             status = 404
             message = "User exists."
         else:
