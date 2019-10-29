@@ -1,7 +1,7 @@
 # app.py - a minimal flask api using flask_restful
 
 from flask import Flask, render_template, make_response
-from flask_restful import Api
+from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -36,12 +36,72 @@ def create_tables():
     db.create_all()
     print(db.engine.table_names())
 
-import views, models, resources
 
-api.add_resource(resources.Index, '/')
-api.add_resource(resources.Login, '/login')
-api.add_resource(resources.Register, '/register')
-api.add_resource(resources.CheckLogin, '/user/<username>')
+users = [
+    'osiakm',
+    'admin'
+]
+
+parser = reqparse.RequestParser().add_argument(
+    'username', help='This field cannot be blank', required=True
+).add_argument(
+    'email', help='This field cannot be blank', required=True
+).add_argument(
+    'password', help='This field cannot be blank', required=True
+)
+
+class Index(Resource):
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('index.html'), 200, headers)
+
+
+class Login(Resource):
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('login.html'), 200, headers)
+
+class Register(Resource):
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('register.html'), 200, headers)
+
+    def post(self):
+        headers = {'Content-Type': 'text/html'}
+        data = parser.parse_args()
+
+        if UserModel.find_by_username(data['username']):
+            return {'message': 'User {} already exists'. format(data['username'])}
+
+        new_user = UserModel(
+            username = data['username'],
+            password = data['password'],
+            email = data['email']
+        )
+        print(data)
+        try:
+            new_user.save_to_db()
+            return {'message': 'User {} was created'.format( data['username'])}, 200
+        except:
+            return {'message': 'Something went wrong'}, 500
+
+
+class CheckLogin(Resource):
+    def get(self, username):
+        headers = {'Content-Type': 'text/html'}
+        if username in users:
+            status = 404
+            message = "User exists."
+        else:
+            status = 200
+            message = "There is no user with this username."
+        return make_response(message, status, headers)
+
+
+api.add_resource(Index, '/')
+api.add_resource(Login, '/login')
+api.add_resource(Register, '/register')
+api.add_resource(CheckLogin, '/user/<username>')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
