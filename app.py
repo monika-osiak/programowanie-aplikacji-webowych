@@ -42,10 +42,18 @@ users = [
     'admin'
 ]
 
-parser = reqparse.RequestParser().add_argument(
+login_parser = reqparse.RequestParser().add_argument(
     'username', help='This field cannot be blank', required=True
 ).add_argument(
     'password', help='This field cannot be blank', required=True
+)
+
+register_parser = reqparse.RequestParser().add_argument(
+    'username', help='This field cannot be blank', required=True
+).add_argument(
+    'password', help='This field cannot be blank', required=True
+).add_argument(
+    'email', help='This field cannot be blank', required=True
 )
 
 class Index(Resource):
@@ -61,7 +69,7 @@ class Login(Resource):
 
     def post(self):
         headers = {'Content-Type': 'text/html'}
-        data = parser.parse_args()
+        data = login_parser.parse_args()
         current_user = UserModel.find_by_username(data['username'])
         if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}
@@ -78,7 +86,7 @@ class Register(Resource):
 
     def post(self):
         headers = {'Content-Type': 'text/html'}
-        data = parser.parse_args()
+        data = register_parser.parse_args()
 
         if UserModel.find_by_username(data['username']):
             return {'message': 'User {} already exists'. format(data['username'])}
@@ -88,10 +96,9 @@ class Register(Resource):
             password = data['password'],
             email = data['email']
         )
-        print(data)
         try:
             new_user.save_to_db()
-            return {'message': 'User {} was created'.format( data['username'])}, 200
+            return make_response(render_template('index.html', user=new_user.username), 200, headers)
         except:
             return {'message': 'Something went wrong'}, 500
 
