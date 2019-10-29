@@ -28,14 +28,31 @@ class UserModel(db.Model):
     @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username = username).first()
-        
+
+    @classmethod
+    def return_all(cls):
+        def to_json(x):
+            return {
+                'username': x.username,
+                'password': x.password,
+                'email': x.email
+            }
+        return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
+
+    @classmethod
+    def delete_all(cls):
+        try:
+            num_rows_deleted = db.session.query(cls).delete()
+            db.session.commit()
+            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
+        except:
+            return {'message': 'Something went wrong'}
 
 @app.before_first_request
 def create_tables():
     print('Tworzenie bazy danych.')
     db.create_all()
     print(db.engine.table_names())
-
 
 login_parser = reqparse.RequestParser().add_argument(
     'username', help='This field cannot be blank', required=True
@@ -110,10 +127,19 @@ class CheckLogin(Resource):
         return make_response(message, status, headers)
 
 
+class AllUsers(Resource):
+    def get(self):
+        return UserModel.return_all()
+
+    def delete(self):
+        return UserModel.delete_all()
+
+
 api.add_resource(Index, '/')
 api.add_resource(Login, '/login')
 api.add_resource(Register, '/register')
 api.add_resource(CheckLogin, '/user/<username>')
+api.add_resource(AllUsers, '/users')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
