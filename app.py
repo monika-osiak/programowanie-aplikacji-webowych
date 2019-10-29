@@ -67,7 +67,7 @@ class Login(Resource):
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}
         
         if data['password'] == current_user.password:
-            return {'message': 'Logged in as {}'.format(current_user.username)}
+            return make_response(render_template('index.html', user=current_user.username), 200, headers)
         else:
             return {'message': 'Wrong credentials'}
 

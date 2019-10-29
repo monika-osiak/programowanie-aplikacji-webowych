@@ -4,3 +4,4 @@ mendeley-venv/
 *.min.css
 .vscode
 __pycache__
+static/sass/styles.css

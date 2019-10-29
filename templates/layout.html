@@ -17,8 +17,13 @@
         <h1>Mendeley clone</h1>
         <nav>
             <ul>
-                <li><a href={{ url_for('login') }}>Login</a></li>
+                {% if user %}
+                <li>Welcome, {{ user }}</li>
+                <li><a href="#">Log out</a></li>
+                {% else %}
+                <li><a href={{ url_for('login') }}>Log in</a></li>
                 <li><a href={{ url_for('register') }}>Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
