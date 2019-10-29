@@ -45,8 +45,6 @@ users = [
 parser = reqparse.RequestParser().add_argument(
     'username', help='This field cannot be blank', required=True
 ).add_argument(
-    'email', help='This field cannot be blank', required=True
-).add_argument(
     'password', help='This field cannot be blank', required=True
 )
 
@@ -60,6 +58,18 @@ class Login(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('login.html'), 200, headers)
+
+    def post(self):
+        headers = {'Content-Type': 'text/html'}
+        data = parser.parse_args()
+        current_user = UserModel.find_by_username(data['username'])
+        if not current_user:
+            return {'message': 'User {} doesn\'t exist'.format(data['username'])}
+        
+        if data['password'] == current_user.password:
+            return {'message': 'Logged in as {}'.format(current_user.username)}
+        else:
+            return {'message': 'Wrong credentials'}
 
 class Register(Resource):
     def get(self):
