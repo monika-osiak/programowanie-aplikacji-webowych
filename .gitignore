@@ -5,3 +5,4 @@ mendeley-venv/
 .vscode
 __pycache__
 static/sass/styles.css
+*.db
