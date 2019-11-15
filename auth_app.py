@@ -43,21 +43,25 @@ def auth():
     else:
         response.set_cookie('session_id', 'INVALIDATE', max_age=INVALIDATE)
         response.headers['Location'] = '/login'
-    '''
-    response.set_cookie(
-        'username',
-        username if username in users else 'INVALIDATE',
-        max_age=SESSION_TIME if username in users else INVALIDATE
-    )'''
+
     return response
 
 @app.route('/register')
 def register():
     return make_response(render_template('register.html'))
 
-@app.route('/validate') # validate new users
+@app.route('/validate', methods=['POST']) # validate new users
 def validate():
-    pass
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if username not in users:
+        users[username] = password
+        response = redirect('/login')
+    else:
+        response = redirect('/register')
+
+    return response
 
 @app.route('/check/<username>') # check is username is available
 def check(username):
