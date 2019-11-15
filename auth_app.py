@@ -30,7 +30,11 @@ def validate():
 
 @app.route('/check/<username>') # check is username is available
 def check(username):
-    pass
+    if username in users:
+        status = 404
+    else:
+        status = 200
+    return make_response('', status)
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ document.getElementById("form").onkeypress = (e) => {
 
 function asyncCheckLogin(login) {
     return new Promise((resolve, reject) => {
-        const url = `/user/${login}`;
+        const url = `/check/${login}`;
         var request = new XMLHttpRequest();
         request.open('GET', url);
 
