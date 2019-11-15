@@ -67,6 +67,10 @@ def check(username):
         status = 200
     return make_response('', status)
 
+@app.route('/all')
+def all():
+    return users
+
 def redirect(location):
     response = make_response('', 303)
     response.headers['Location'] = location
