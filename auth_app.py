@@ -8,7 +8,7 @@ def index():
 
 @app.route('/login')
 def login():
-    pass
+    return make_response(render_template('login.html'))
 
 @app.route('/auth') # authenticate users
 def auth():
@@ -16,7 +16,7 @@ def auth():
 
 @app.route('/register')
 def register():
-    pass
+    return make_response(render_template('register.html'))
 
 @app.route('/validate') # validate new users
 def validate():
@@ -25,3 +25,7 @@ def validate():
 @app.route('/check/<username>') # check is username is available
 def check(username):
     pass
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
