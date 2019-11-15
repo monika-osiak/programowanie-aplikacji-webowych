@@ -1,4 +1,5 @@
-from flask import Flask, render_template, make_response
+from flask import Flask, render_template, make_response, request
+from uuid import uuid4
 
 app = Flask(__name__)
 
@@ -7,18 +8,48 @@ users = {
 }
 
 session = dict()
+SESSION_TIME = 180
+INVALIDATE = -1
 
 @app.route('/') # main page
 def index():
-    pass
+    session_id = request.cookies.get('session_id')
+    user = request.cookies.get('username')
+    return make_response(render_template('index.html', user=user))
 
 @app.route('/login')
 def login():
     return make_response(render_template('login.html'))
 
-@app.route('/auth') # authenticate users
+@app.route('/logout')
+def logout():
+    response = redirect('/')
+    response.set_cookie('session_id', 'INVALIDATE', max_age=INVALIDATE)
+    response.set_cookie('username', 'INVALIDATE', max_age=INVALIDATE)
+    return response
+
+@app.route('/auth', methods=['POST']) # authenticate users
 def auth():
-    pass
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    response = make_response('', 303)
+
+    if username in users and users[username] == password:
+        session_id = str(uuid4())
+        response.set_cookie('session_id', session_id, max_age=SESSION_TIME)
+        response.headers['Location'] = '/'
+        response.set_cookie('username', username, max_age=SESSION_TIME)
+    else:
+        response.set_cookie('session_id', 'INVALIDATE', max_age=INVALIDATE)
+        response.headers['Location'] = '/login'
+    '''
+    response.set_cookie(
+        'username',
+        username if username in users else 'INVALIDATE',
+        max_age=SESSION_TIME if username in users else INVALIDATE
+    )'''
+    return response
 
 @app.route('/register')
 def register():
@@ -36,6 +67,10 @@ def check(username):
         status = 200
     return make_response('', status)
 
+def redirect(location):
+    response = make_response('', 303)
+    response.headers['Location'] = location
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
