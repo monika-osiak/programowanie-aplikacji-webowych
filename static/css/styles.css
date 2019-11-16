@@ -24,7 +24,7 @@ header {
   padding: 0 20px;
 }
 
-header h1 {
+#logo {
   width: 800px;
   text-align: left;
   margin: auto 0;
