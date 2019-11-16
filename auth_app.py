@@ -82,6 +82,8 @@ def all():
 @app.route('/upload')
 def upload():
     session_id = request.cookies.get('session_id')
+    username = request.cookies.get('username')
+
     if session_id:
         if session_id in session:
             fid, content_type = session[session_id]
@@ -90,19 +92,11 @@ def upload():
 
         download_token = create_token(fid).decode('ascii')
         upload_token = create_token().decode('ascii')
-        return f"""
-            <h1>APP</h1>
-            <a href="/download/{fid}?token={download_token}&content_type={content_type}">{fid}</a>
-            <form action="/upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="file"/>
-                <input type="hidden" name="token"    value="{upload_token}" />
-                <input type="hidden" name="callback" value="/callback" />
-                <input type="submit"/>
-            </form> """
+        return make_response(render_template('upload.html', upload_token=upload_token, user=username), 200)
     return redirect("/login")
 
 @app.route('/callback')
-def uploaded():
+def callback(): # when uploaded
     session_id = request.cookies.get('session_id')
     username = request.cookies.get('username')
     fid = request.args.get('fid')

@@ -19,6 +19,7 @@
             <ul>
                 {% if user %}
                 <li>Welcome, {{ user }}</li>
+                <li><a href={{ url_for('upload') }}>Add new file</a></li>
                 <li><a href={{ url_for('logout') }}>Log out</a></li>
                 {% else %}
                 <li><a href={{ url_for('login') }}>Log in</a></li>

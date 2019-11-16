@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-6 offset-md-3 box'>
+                <h1>Upload file</h1>
+                <form id="form" action={{ url_for('upload') }} method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" id='file'>
+                    <input type="hidden" name="token" value="{{ upload_token }}" />
+                    <input type="hidden" name="callback" value={{ url_for('callback') }} />
+                    <button type="submit" class="button">Upload file</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/basic-script.js') }}"></script>
+
+{% endblock content %}

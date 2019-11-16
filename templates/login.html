@@ -4,10 +4,10 @@
 <div class='container'>
     <div class='row'>
         <div class='col-md-6 offset-md-3 box'>
-            <h1>Welcome back!</h1>
+            <h1>...but first, log in.</h1>
             <form action={{ url_for('auth') }} method="post">
                 <input type="text" placeholder="Username" name="username"><br>
-                <input type="text" placeholder="Password" name="password"><br>
+                <input type="password" placeholder="Password" name="password"><br>
                 <button type="submit" class="button">Log in</button>
             </form>
         </div>
