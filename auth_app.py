@@ -1,5 +1,8 @@
 from flask import Flask, render_template, make_response, request
 from uuid import uuid4
+from jwt import encode
+
+import datetime
 
 app = Flask(__name__)
 
@@ -8,12 +11,13 @@ users = {
 }
 
 session = dict()
+JWT_SECRET = 'secret'
+JWT_SESSION_TIME = 30
 SESSION_TIME = 180
 INVALIDATE = -1
 
 @app.route('/') # main page
 def index():
-    session_id = request.cookies.get('session_id')
     user = request.cookies.get('username')
     return make_response(render_template('index.html', user=user))
 
@@ -74,6 +78,52 @@ def check(username):
 @app.route('/all')
 def all():
     return users
+
+@app.route('/upload')
+def upload():
+    session_id = request.cookies.get('session_id')
+    if session_id:
+        if session_id in session:
+            fid, content_type = session[session_id]
+        else:
+            fid, content_type = '', 'text/plain'
+
+        download_token = create_token(fid).decode('ascii')
+        upload_token = create_token().decode('ascii')
+        return f"""
+            <h1>APP</h1>
+            <a href="/download/{fid}?token={download_token}&content_type={content_type}">{fid}</a>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file"/>
+                <input type="hidden" name="token"    value="{upload_token}" />
+                <input type="hidden" name="callback" value="/callback" />
+                <input type="submit"/>
+            </form> """
+    return redirect("/login")
+
+@app.route('/callback')
+def uploaded():
+    session_id = request.cookies.get('session_id')
+    username = request.cookies.get('username')
+    fid = request.args.get('fid')
+    err = request.args.get('err')
+
+    if not session_id:
+        return redirect('/login')
+
+    if err:
+        return make_response(f'<h1>AUTH APP</h1> Upload failed: {err}', 400)
+    
+    if not fid:
+        return make_response('<h1>AUTH APP</h1> Upload failed: successfull but no fid returned.', 400)
+
+    content_type = request.args.get('content_type', 'text_plain')
+    session[session_id] = (fid, content_type)
+    return make_response(f'<h1>AUTH APP</h1> User {username} uploaded {fid} ({content_type}).', 200)
+
+def create_token(fid=None):
+    exp = datetime.datetime.utcnow() + datetime.timedelta(seconds=JWT_SESSION_TIME)
+    return encode({'iss': 'mendeley.io', 'exp': exp}, JWT_SECRET, 'HS256')
 
 def redirect(location):
     response = make_response('', 303)
