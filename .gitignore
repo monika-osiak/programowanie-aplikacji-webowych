@@ -6,3 +6,4 @@ mendeley-venv/
 __pycache__
 static/sass/styles.css
 *.db
+tmp/
