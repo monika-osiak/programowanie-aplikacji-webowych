@@ -2,11 +2,18 @@ from flask import Flask, request, make_response
 from auth_app import redirect, JWT_SECRET
 from uuid import uuid4
 from jwt import decode, InvalidTokenError
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
 
 import os
 
 app = Flask(__name__)
-#JWT_SECRET = 'secret'
+
+HOST = getenv('HOST')
+AUTH_PORT = getenv('AUTH_PORT')
+FILE_PORT = getenv('FILE_PORT')
 
 @app.route('/download/<fid>')
 def download(fid):
@@ -36,7 +43,8 @@ def download(fid):
 def upload():
     f = request.files.get('file')
     token = request.form.get('token')
-    callback = 'http://0.0.0.0:5000' + request.form.get('callback')
+    callback = request.form.get('callback')
+    callback = f'http://{HOST}:{AUTH_PORT}{callback}'
     print(callback)
 
     if f is None:
@@ -71,4 +79,4 @@ def valid(token):
     return True
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    app.run(debug=True, host=HOST, port=FILE_PORT)

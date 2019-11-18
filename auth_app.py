@@ -1,6 +1,10 @@
 from flask import Flask, render_template, make_response, request
 from uuid import uuid4
 from jwt import encode
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
 
 import datetime
 
@@ -9,11 +13,14 @@ app = Flask(__name__)
 users = {
     'admin': 'password',
 }
-
 session = dict()
-JWT_SECRET = 'secret'
-JWT_SESSION_TIME = 30
-SESSION_TIME = 180
+
+JWT_SECRET = getenv('JWT_SECRET')
+JWT_SESSION_TIME = int(getenv('JWT_SESSION_TIME'))
+SESSION_TIME = int(getenv('SESSION_TIME'))
+HOST = getenv('HOST')
+AUTH_PORT = getenv('AUTH_PORT')
+FILE_PORT = getenv('FILE_PORT')
 INVALIDATE = -1
 
 @app.route('/') # main page
@@ -92,7 +99,8 @@ def upload():
 
         download_token = create_token(fid).decode('ascii')
         upload_token = create_token().decode('ascii')
-        return make_response(render_template('upload.html', upload_token=upload_token, user=username), 200)
+        action = f'http://{HOST}:{FILE_PORT}/upload'
+        return make_response(render_template('upload.html', upload_token=upload_token, user=username, action=action), 200)
     return redirect("/login")
 
 @app.route('/callback')
@@ -125,4 +133,4 @@ def redirect(location):
     return response
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host=HOST, port=AUTH_PORT)
