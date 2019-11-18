@@ -3,6 +3,8 @@ from auth_app import redirect, JWT_SECRET
 from uuid import uuid4
 from jwt import decode, InvalidTokenError
 
+import os
+
 app = Flask(__name__)
 #JWT_SECRET = 'secret'
 
@@ -24,7 +26,7 @@ def download(fid):
         return make_response('<h1>FILE APP</h1> Incorrect token payload.', 401)
     
     content_type = request.headers.get('Accept') or request.args.get('content_type')
-    with open('/tmp/' + fid, 'rb') as file:
+    with open('tmp/' + fid, 'rb') as file:
         content = file.read()
         response = make_response(content, 200)
         response.headers['Content-Type'] = content_type
@@ -32,11 +34,12 @@ def download(fid):
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    file = request.files.get('file')
+    f = request.files.get('file')
     token = request.form.get('token')
-    callback = request.form.get('callback')
+    callback = 'http://0.0.0.0:5000' + request.form.get('callback')
+    print(callback)
 
-    if file is None:
+    if f is None:
         return make_response('<h1>FILE APP</h1> No file provided.', 400)
     
     if token is None:
@@ -45,11 +48,19 @@ def upload():
     if not valid(token):
         return make_response('<h1>FILE APP</h1> Invalid token.', 401)
 
-    fid, content_type = str(uuid4()), file.content_type
-    file.save('/tmp/' + fid)
-    file.close()
+    try:
+        os.makedirs("tmp/")
+    except FileExistsError:
+        # directory already exists
+        pass
 
-    return make_response(f'<h1>FILE APP</h1> Uploaded {fid}', 200)
+    fid, content_type = str(uuid4()), f.content_type
+    f.save('tmp/' + fid)
+    f.close()
+
+    #return make_response(f'<h1>FILE APP</h1> Uploaded {fid}', 200)
+    return redirect(f"{callback}?fid={fid}&content_type={content_type}") if callback \
+    else (f'<h1>CDN</h1> Uploaded {fid}', 200)
 
 def valid(token):
     try:
