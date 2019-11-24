@@ -1,5 +1,4 @@
 from flask import Flask, request, make_response
-from auth_app import redirect, JWT_SECRET
 from uuid import uuid4
 from jwt import decode, InvalidTokenError
 from os import getenv
@@ -14,6 +13,7 @@ app = Flask(__name__)
 HOST = getenv('HOST')
 AUTH_PORT = getenv('AUTH_PORT')
 FILE_PORT = getenv('FILE_PORT')
+JWT_SECRET = getenv('JWT_SECRET')
 
 @app.route('/download/<fid>')
 def download(fid):
@@ -77,6 +77,11 @@ def valid(token):
         print(str(err))
         return False
     return True
+
+def redirect(location):
+    response = make_response('', 303)
+    response.headers['Location'] = location
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host=HOST, port=FILE_PORT)
