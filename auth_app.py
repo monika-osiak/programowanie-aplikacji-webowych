@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv(verbose=True)
 
 import datetime
+import redis
 
 app = Flask(__name__)
 
@@ -14,6 +15,7 @@ users = {
     'admin': 'password',
 }
 session = dict()
+sessions = redis.Redis()
 
 JWT_SECRET = getenv('JWT_SECRET')
 JWT_SESSION_TIME = int(getenv('JWT_SESSION_TIME'))
@@ -34,6 +36,10 @@ def login():
 
 @app.route('/logout')
 def logout():
+    # remove session_id from database
+    username = request.cookies.get('username')
+    sessions.delete(username)
+
     response = redirect('/')
     response.set_cookie('session_id', 'INVALIDATE', max_age=INVALIDATE)
     response.set_cookie('username', 'INVALIDATE', max_age=INVALIDATE)
@@ -48,6 +54,7 @@ def auth():
 
     if username in users and users[username] == password:
         session_id = str(uuid4())
+        sessions.set(username, session_id)
         response.set_cookie('session_id', session_id, max_age=SESSION_TIME)
         response.headers['Location'] = '/'
         response.set_cookie('username', username, max_age=SESSION_TIME)
