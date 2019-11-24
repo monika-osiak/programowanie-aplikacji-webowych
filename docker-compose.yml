@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  auth:
+    container_name: auth
+    restart: always
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    command: []
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./auth:/auth
+    links:
+      - redis
+
+  file:
+    container_name: file
+    restart: always
+    build:
+      context: ./file
+      dockerfile: Dockerfile
+    command: []
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./file:/file
