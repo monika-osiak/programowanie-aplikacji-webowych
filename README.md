@@ -25,6 +25,22 @@ Pozostałe loginy mają działać.
 ### Polecenie
 Opracowanie modułu służącego do bezpiecznego logowania i wylogowywania użytkownika. Moduł logowania otrzymuje od użytkownika hasło i login – w przypadku poprawnych danych generowany jest identyfikator sesji. Dane sesyjne przechowywane są w bazie danych Redis. Należy opracować formularz pozwalający na przechowywanie przez użytkownika plików PDF w systemie. Pliki PDF powinny być dostępne do pobrania i serwowane przez bezstanową aplikację. Należy wykorzystać JWT z krótką datą ważności.
 #### Deadline: 25.11.2019
+#### Jak testować?
+Uruchomienie poleceń 
+```
+docker-compose build
+docker-compose up
+```
+pozwoli postawić projekt. O ile dockery z moimi aplikacjami działają, pojawia się problem połączenia z Redisem - zabrakło mi czasu aby go rozwiązać.
+
+Dlatego, jeśli to mozliwe, najlepiej jest sprawdzić działanie projektu uruchamiając ręcznie wszystkie trzy komponenty:
+```
+python3 auth/auth_app.py
+python3 file/file_app.py
+redis-server
+```
+
+Wstępna wersja aplikacji jest postawiona na [Heroku](https://mendeley.herokuapp.com). Działa tam logowanie i rejestracja uzytkowników, nie działa dodawanie plików - głównie ze względu na to, ze druga z aplikacji nie została jeszcze postawiona na Heroku.
 
 ## P3
 ### Polecenie
