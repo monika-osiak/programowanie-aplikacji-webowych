@@ -1,1 +1,2 @@
-web: gunicorn auth_app:app
+auth: gunicorn auth/auth_app:auth
+file: gunicorn file/file_app:file
