@@ -15,7 +15,7 @@ users = {
     'admin': 'password',
 }
 session = dict()
-sessions = redis.Redis()
+sessions = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 JWT_SECRET = getenv('JWT_SECRET')
 JWT_SESSION_TIME = int(getenv('JWT_SESSION_TIME'))
