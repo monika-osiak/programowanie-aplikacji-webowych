@@ -84,6 +84,7 @@ p {
   border-radius: 20px;
   -webkit-box-shadow: -1px -0px 20px black;
           box-shadow: -1px -0px 20px black;
+  padding: 25px;
 }
 
 .container {

@@ -107,7 +107,13 @@ def upload():
         download_token = create_token(fid).decode('ascii')
         upload_token = create_token().decode('ascii')
         action = f'http://{HOST}:{FILE_PORT}/upload'
-        return make_response(render_template('upload.html', upload_token=upload_token, user=username, action=action), 200)
+        return make_response(render_template(
+            'upload.html', 
+            upload_token=upload_token, 
+            user=username,
+            fid = fid,
+            download_token = download_token,
+            content_type = content_type), 200)
     return redirect("/login")
 
 @app.route('/callback')
@@ -126,9 +132,10 @@ def callback(): # when uploaded
     if not fid:
         return make_response('<h1>AUTH APP</h1> Upload failed: successfull but no fid returned.', 400)
 
+    download_token = create_token(fid).decode('ascii')
     content_type = request.args.get('content_type', 'text_plain')
     session[session_id] = (fid, content_type)
-    return make_response(f'<h1>AUTH APP</h1> User {username} uploaded {fid} ({content_type}).', 200)
+    return redirect('/upload')
 
 def create_token(fid=None):
     exp = datetime.datetime.utcnow() + datetime.timedelta(seconds=JWT_SESSION_TIME)
