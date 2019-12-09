@@ -89,11 +89,11 @@ def check(username):
         status = 200
     return make_response('', status)
 
-@app.route('/all')
-def all():
+@app.route('/all-users')
+def all_users():
     return users
 
-@app.route('/upload')
+@app.route('/upload')  # add new entry
 def upload():
     session_id = request.cookies.get('session_id')
     username = request.cookies.get('username')
@@ -115,6 +115,14 @@ def upload():
             download_token = download_token,
             content_type = content_type), 200)
     return redirect("/login")
+
+@app.route('/all')  # get all files of user
+def all():
+    return make_response('<h1>/all</h1> Get all files of logged user.', 200)
+
+@app.route('/delete/<fid>')  # delete given entry
+def delete(fid):
+    return make_response('<h1>/delete/*fid*</h1> Remove given file.', 200)
 
 @app.route('/callback')
 def callback(): # when uploaded
