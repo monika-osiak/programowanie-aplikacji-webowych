@@ -3,6 +3,8 @@ from uuid import uuid4
 from jwt import encode
 from os import getenv
 from dotenv import load_dotenv
+from pprint import pprint
+from copy import deepcopy
 
 load_dotenv(verbose=True)
 
@@ -10,12 +12,20 @@ import datetime
 import redis
 
 app = Flask(__name__)
+app.jinja_env.filters['zip'] = zip
 
 users = {
     'admin': 'password',
 }
+
+files = {
+    'admin': [
+        ['e1d54e90-61e2-417d-ac92-48202763460b', 'application/pdf'],
+    ]
+}
+
 session = dict()
-sessions = redis.Redis(host='redis', port=6379, decode_responses=True)
+sessions = redis.Redis(host='0.0.0.0', port=6379, decode_responses=True)
 
 JWT_SECRET = getenv('JWT_SECRET')
 JWT_SESSION_TIME = int(getenv('JWT_SESSION_TIME'))
@@ -54,7 +64,7 @@ def auth():
 
     if username in users and users[username] == password:
         session_id = str(uuid4())
-        sessions.set(username, session_id)
+        sessions.set(session_id, username)
         response.set_cookie('session_id', session_id, max_age=SESSION_TIME)
         response.headers['Location'] = '/'
         response.set_cookie('username', username, max_age=SESSION_TIME)
@@ -99,21 +109,27 @@ def upload():
     username = request.cookies.get('username')
 
     if session_id:
-        if session_id in session:
-            fid, content_type = session[session_id]
+        pprint(files)
+        print()
+        if sessions.exists(session_id) and username in files:
+            files_data = deepcopy(files[username])
+            
         else:
-            fid, content_type = '', 'text/plain'
+            files_data = [
+                ['', 'text/plain']
+            ]
 
-        download_token = create_token(fid).decode('ascii')
+        for elem in files_data:
+            elem.append(create_token(elem[0]).decode('ascii'))
+        pprint(files_data)
+        # download_tokens = [create_token(fid).decode('ascii') for fid in fids]
         upload_token = create_token().decode('ascii')
-        action = f'http://{HOST}:{FILE_PORT}/upload'
+        # action = f'http://{HOST}:{FILE_PORT}/upload'
         return make_response(render_template(
             'upload.html', 
             upload_token=upload_token, 
             user=username,
-            fid = fid,
-            download_token = download_token,
-            content_type = content_type), 200)
+            files=files_data), 200)
     return redirect("/login")
 
 @app.route('/callback')
@@ -135,6 +151,12 @@ def callback(): # when uploaded
     download_token = create_token(fid).decode('ascii')
     content_type = request.args.get('content_type', 'text_plain')
     session[session_id] = (fid, content_type)
+    if username not in files:
+        files[username] = [
+            [fid, content_type]
+        ]
+    else:
+        files[username].append([fid, content_type])
     return redirect('/upload')
 
 def create_token(fid=None):

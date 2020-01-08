@@ -4,10 +4,11 @@
     <div class='container'>
         <div class='row'>
             <div class='col-md-6 offset-md-3 box'>
-                {% if fid %}
+                {% if files %}
                 <p class="info">
-                    Ostatnio przesłany plik: 
-                    <a href="http://0.0.0.0:5001/download/{{fid}}?token={{download_token}}&content_type={{content_type}}">{{ fid }}</a>
+                    {% for fid, type, token in files %}
+                        <p><a href="http://0.0.0.0:5001/download/{{fid}}?token={{token}}&content_type={{type}}">{{ fid }}</a></p>
+                    {% endfor %}
                 </p>
                 {% endif %}
                 <h1>Upload file</h1>
