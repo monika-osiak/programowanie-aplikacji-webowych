@@ -42,6 +42,7 @@ def download(fid):
 @app.route('/upload', methods=['POST'])
 def upload():
     f = request.files.get('file')
+    name = request.form.get('filename')
     token = request.form.get('token')
     callback = request.form.get('callback')
     callback = f'http://{HOST}:{AUTH_PORT}{callback}'
@@ -62,7 +63,7 @@ def upload():
         # directory already exists
         pass
 
-    fid, content_type = str(uuid4()), f.content_type
+    fid, content_type = name, f.content_type
     f.save('tmp/' + fid)
     f.close()
 

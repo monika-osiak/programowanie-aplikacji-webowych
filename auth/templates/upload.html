@@ -7,12 +7,17 @@
                 {% if files %}
                 <p class="info">
                     {% for fid, type, token in files %}
-                        <p><a href="http://0.0.0.0:5001/download/{{fid}}?token={{token}}&content_type={{type}}">{{ fid }}</a></p>
+                        <p>
+                            {{ fid }}
+                            <a href="http://0.0.0.0:5001/download/{{fid}}?token={{token}}&content_type={{type}}">→ download</a>
+                            <a href="#">→ delete</a>
+                        </p>
                     {% endfor %}
                 </p>
                 {% endif %}
                 <h1>Upload file</h1>
                 <form id="form" action="http://0.0.0.0:5001/upload" method="post" enctype="multipart/form-data">
+                    <input type="text" placeholder="Filename" name="filename"><br>
                     <input type="file" name="file" id='file'>
                     <input type="hidden" name="token" value="{{ upload_token }}" />
                     <input type="hidden" name="callback" value={{ url_for('callback') }} />
