@@ -132,6 +132,36 @@ def upload():
             files=files_data), 200)
     return redirect("/login")
 
+@app.route('/remove/<fid>')
+def remove(fid):
+    session_id = request.cookies.get('session_id')
+    username = request.cookies.get('username')
+
+    if session_id:
+        pprint(files)
+        print()
+        if sessions.exists(session_id) and username in files:
+            files_data = deepcopy(files[username])
+            
+        else:
+            files_data = [
+                ['', 'text/plain']
+            ]
+
+        for i, elem in enumerate(files_data):
+            if elem[0] == fid:
+                files_data = files_data[0:i] + files_data[i+1:]
+                files[username] = files_data
+        # download_tokens = [create_token(fid).decode('ascii') for fid in fids]
+        upload_token = create_token().decode('ascii')
+        # action = f'http://{HOST}:{FILE_PORT}/upload'
+        return make_response(render_template(
+            'upload.html', 
+            upload_token=upload_token, 
+            user=username,
+            files=files_data), 200)
+    return redirect("/login")
+
 @app.route('/callback')
 def callback(): # when uploaded
     session_id = request.cookies.get('session_id')
